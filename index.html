@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wave2Bit — Pulse Code Modulation</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Wave2Bit</h1>
+  <p class="tagline">Pulse Code Modulation &mdash; Voice to Binary</p>
+</header>
+
+<main>
+
+  <!-- STEP 1 -->
+  <section id="step-voice">
+    <h2>1. Voice Input</h2>
+    <div class="btn-row">
+      <button id="btn-record">&#127908; Start Recording</button>
+      <button id="btn-demo" class="secondary">Use Demo Voice</button>
+    </div>
+    <p id="record-status" class="hint">Record ~3 seconds of voice, or use the demo voice.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section id="step-analog">
+    <h2>2. Analog Voice Signal</h2>
+    <p class="label">Continuous Analog Signal</p>
+    <canvas id="canvas-analog" height="180"></canvas>
+    <p class="explain">A voice is naturally a continuous analog signal.</p>
+  </section>
+
+  <!-- STEP 3 -->
+  <section id="step-sampling">
+    <h2>3. Sampling</h2>
+    <p class="explain">Sampling measures the analog signal at regular time intervals.</p>
+    <canvas id="canvas-samples" height="180"></canvas>
+    <div class="control">
+      <label for="sampling-rate">Sampling Rate</label>
+      <div class="slider-row">
+        <span>Low</span>
+        <input type="range" id="sampling-rate" min="8" max="60" value="24" step="1">
+        <span>High</span>
+      </div>
+      <p class="control-value"><span id="sampling-value">24</span> samples</p>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section id="step-quant">
+    <h2>4. Quantization</h2>
+    <p class="explain">Each sampled amplitude is mapped to the nearest available level.</p>
+    <canvas id="canvas-quant" height="180"></canvas>
+    <div class="control">
+      <label>Quantization Levels</label>
+      <div class="btn-row" id="quant-btns">
+        <button data-levels="4">4 levels</button>
+        <button data-levels="8" class="active">8 levels</button>
+        <button data-levels="16">16 levels</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 5 -->
+  <section id="step-encoding">
+    <h2>5. PCM Encoding</h2>
+    <p class="explain">The quantized value is converted into a binary code.</p>
+    <table id="encoding-table">
+      <thead>
+        <tr><th>Sample</th><th>Quantized Level</th><th>PCM Code</th></tr>
+      </thead>
+      <tbody id="encoding-body">
+        <tr><td colspan="3" class="empty">No signal yet.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- STEP 6 -->
+  <section id="step-stream">
+    <h2>6. PCM Binary Stream</h2>
+    <p id="binary-spaced" class="mono">&mdash;</p>
+    <p class="label">PCM Data</p>
+    <p id="binary-flat" class="mono">&mdash;</p>
+  </section>
+
+  <!-- STEP 7 -->
+  <section id="step-noise">
+    <h2>7. Add Noise</h2>
+    <div class="control">
+      <label for="noise">Noise Level</label>
+      <div class="slider-row">
+        <span>0%</span>
+        <input type="range" id="noise" min="0" max="100" value="0" step="1">
+        <span>100%</span>
+      </div>
+      <p class="control-value"><span id="noise-value">0</span>%</p>
+    </div>
+    <p class="explain">Noise randomly flips bits (0 &rarr; 1, 1 &rarr; 0).</p>
+    <div class="control">
+      <label>Replay Audio</label>
+      <div class="btn-row">
+        <button id="btn-play">&#9654; Play Original Voice</button>
+        <button id="btn-play-pcm" class="secondary">&#9654; Play PCM</button>
+        <button id="btn-play-noisy" class="secondary">&#9654; Play Noisy PCM</button>
+      </div>
+      <p id="play-status" class="control-value">Hear your true voice, then the digitized versions.</p>
+      <p class="hint">PCM playback uses telephone-style 8 kHz sampling so spoken words stay understandable. The diagrams use a much lower rate to make the sampling effect visible.</p>
+    </div>
+  </section>
+
+  <!-- STEP 8 -->
+  <section id="step-received">
+    <h2>8. Received PCM Data</h2>
+    <p class="label">Transmitted</p>
+    <p id="rx-tx" class="mono">&mdash;</p>
+    <p class="label">Received</p>
+    <p id="rx-rx" class="mono">&mdash;</p>
+    <p class="stats">Bit Errors: <strong id="bit-errors">0</strong></p>
+    <p class="stats">Bit Error Rate: <strong id="ber">0%</strong></p>
+  </section>
+
+  <!-- FINAL FLOW -->
+  <section id="step-flow">
+    <h2>Final PCM Flow</h2>
+    <p class="flow">VOICE<br>&darr;<br>ANALOG SIGNAL<br>&darr;<br>SAMPLING<br>&darr;<br>QUANTIZATION<br>&darr;<br>ENCODING<br>&darr;<br>PCM BINARY<br>&darr;<br>NOISE<br>&darr;<br>RECEIVED BINARY</p>
+  </section>
+
+  <button id="btn-reset" class="secondary reset">Reset</button>
+
+</main>
+
+<footer>
+  <p>Everything runs locally in your browser. Nothing is uploaded.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
